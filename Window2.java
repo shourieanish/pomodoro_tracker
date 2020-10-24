@@ -4,24 +4,14 @@ import java.awt.event.*;
 import javax.swing.Timer;
 import java.util.TimerTask;
 
-public class Window2 implements ActionListener {
+public class Window2 implements ActionListener, ItemListener {
 	private JFrame frame;
     private JPanel panel;
     private JButton start;
-    private JButton stop;
-    private int min = 24;
-    private int sec = 24;
-    private boolean timer_started = false;
-    private Timer timer = new Timer(1000, new ActionListener() {
-    		public void actionPerformed(ActionEvent e) {
-    			if (sec == 0){
-    				;
-    			} else {
-    				sec --;
-    				System.out.println(sec);
-    			}
-    		}
-    	});
+    private int min;
+    private int sec;
+    private JComboBox<Integer> sec_list = new JComboBox<Integer>();
+    private JComboBox<Integer> min_list = new JComboBox<Integer>();
 
     public Window2() {
 
@@ -43,11 +33,34 @@ public class Window2 implements ActionListener {
         start.addActionListener(this); 
         panel.add(start);
 
-        stop = new JButton("Stop");
-        stop.setBounds(30,150,150,25);
-        stop.addActionListener(this); 
-        panel.add(stop);
 
+
+        for (int i=0; i<=60; i++) {
+        	sec_list.addItem(i);
+        }
+
+		sec_list.setSelectedIndex(0);
+		sec_list.addItemListener(this);
+		sec_list.setSize(70,40);
+		sec_list.setLocation(200,200);
+		sec_list.setEditable(true);
+    	sec_list.setVisible(true);
+    	sec_list.setEditable(false);
+		panel.add(sec_list);
+
+
+        for (int i=0; i<=60; i++) {
+        	min_list.addItem(i);
+        }
+
+		min_list.setSelectedIndex(0);
+		min_list.addItemListener(this);
+		min_list.setSize(70,40);
+		min_list.setLocation(300,300);
+		min_list.setEditable(true);
+    	min_list.setVisible(true);
+    	min_list.setEditable(false);
+		panel.add(min_list);
 
 
 
@@ -56,26 +69,19 @@ public class Window2 implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == start && timer_started == false) {
-            timer.start();
-    		timer_started = true;
-     	} else if (e.getSource() == stop) {
-     		timer.stop();
-     		timer_started = false;
+        if (e.getSource() == start) {
+            Window3 w3 = new Window3(min, sec);
+            System.out.println("Lebron");
      	}
+     	System.out.println("KObe");
     }
 
-    // private void start() {
-    // 	Timer timer = new Timer(1000, new ActionListener() {
-    // 		public void actionPerformed(ActionEvent e) {
-    // 			sec --;
-    // 			System.out.println(sec);
-    // 		}
-    // 	});
-    // 	if (timer_started == false) {
-    // 		timer.start();
-    // 		timer_started = true;
-    // 	}
-    // }
+    public void itemStateChanged(ItemEvent e1) {
+        if (e1.getSource() == sec_list) {
+        	sec = (Integer)sec_list.getSelectedItem();
+        } else if (e1.getSource() == min_list){
+        	min = (Integer)min_list.getSelectedItem();
+        }
+    }
     
 }
