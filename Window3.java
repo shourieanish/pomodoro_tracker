@@ -10,39 +10,35 @@ public class Window3 implements ActionListener {
     private JButton start;
     private JButton stop;
     private JButton reset;
+    private JLabel sec_label;
+    private JLabel min_label;
+    private JLabel hr_label;
     private int tm;
+    private int tm_init;
     private boolean timer_started = false;
     private Timer timer;
+    private boolean isWork;
 
-    public Window3(int min, int sec) {
+    public Window3(int hr, int min, int sec, boolean isWork) {
 
-        tm = min*60 + sec;
-        timer = new Timer(1000, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (tm == 0){
-                    ;
-                } else {
-                    tm --;
-                    sec_label.setText(tm);
-                    System.out.println(tm);
-                }
-            }
-        });
+        this.isWork = isWork;
+
+        tm = hr*3600 + min*60 + sec;
+        tm_init = tm;
 
         panel = new JPanel();
         frame = new JFrame("Timer");
         frame.setSize(400,400);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.add(panel);
 
         panel.setLayout(null);
 
-        JLabel min_label = new JLabel("");
+        min_label = new JLabel("");
         min_label.setBounds(50,20,150,25);
         panel.add(min_label);
 
-        JLabel sec_label = new JLabel("");
+        sec_label = new JLabel("");
         sec_label.setBounds(180,200,150,25);
         panel.add(sec_label);
 
@@ -63,6 +59,22 @@ public class Window3 implements ActionListener {
 
 
         frame.setVisible(true);
+
+        timer = new Timer(1000, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (tm == 0){
+                    timer.stop();
+                    frame.setVisible(false);
+                    frame = null;
+                    System.out.println("kobe");
+                    Window5 w5 = new Window5(hr, min, sec, isWork);
+                } else {
+                    tm --;
+                    sec_label.setText(""+(tm%60));
+                    System.out.println(tm);
+                }
+            }
+        });
         
     }
 
@@ -76,10 +88,9 @@ public class Window3 implements ActionListener {
      	} else if (e.getSource() == reset) {
             timer.stop();
             frame.setVisible(false);
-            Window2 w2 = new Window2();
+            Window2 w2 = new Window2(isWork);
         }
     }
 
-
-    
+   
 }

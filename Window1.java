@@ -2,36 +2,37 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+
 public class Window1 implements ActionListener {
 
     private JFrame frame;
     private JPanel panel;
-    private JButton tomato;
+    private JButton work;
     private JButton brk;
 
     public Window1() {
 
         panel = new JPanel();
         frame = new JFrame("Pomodoro Tracker");
-        frame.setSize(400,400);
+        frame.setSize(250,325);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.add(panel);
 
         panel.setLayout(null);
 
-        JLabel label = new JLabel("Collect as many tomatoes as possible!");
-        label.setBounds(50,20,150,25);
+        JLabel label = new JLabel("Productivity Tracker");
+        label.setFont(new Font("Times New Roman", Font.BOLD, 22));
+        label.setBounds(25,10,200,40);
         panel.add(label);
 
-        tomato = new JButton("Start tomato");
-        tomato.setBounds(75,350,150,25);
-        tomato.addActionListener(this); 
-        panel.add(tomato);
+        work = new JButton("Start Working");
+        work.setBounds(50,125,150,75);
+        work.addActionListener(this); 
+        panel.add(work);
 
-
-        brk = new JButton("Take break");
-        brk.setBounds(30,150,150,25);
+        brk = new JButton("Take a Break");
+        brk.setBounds(50,210,150,75);
         brk.addActionListener(this); 
         panel.add(brk);
 
@@ -41,10 +42,14 @@ public class Window1 implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == tomato) {
-            Window2 w2 = new Window2();
-        } else {
-            ;
+        if (e.getSource() == work) {
+            frame.setVisible(false);
+            frame = null;
+            Window2 w2 = new Window2(true);
+        } else if (e.getSource() == brk) {
+            frame.setVisible(false);
+            frame = null;
+            Window2 w2 = new Window2(false);
         }
     }
 
