@@ -12,6 +12,7 @@ public class Window1 implements ActionListener {
 
     public Window1() {
 
+
         panel = new JPanel();
         frame = new JFrame("Pomodoro Tracker");
         frame.setSize(250,325);
@@ -23,16 +24,16 @@ public class Window1 implements ActionListener {
 
         JLabel label = new JLabel("Productivity Tracker");
         label.setFont(new Font("Times New Roman", Font.BOLD, 22));
-        label.setBounds(25,10,200,40);
+        label.setBounds(25,10,200,20);
         panel.add(label);
 
         work = new JButton("Start Working");
-        work.setBounds(50,125,150,75);
+        work.setBounds(50,120,150,75);
         work.addActionListener(this); 
         panel.add(work);
 
         brk = new JButton("Take a Break");
-        brk.setBounds(50,210,150,75);
+        brk.setBounds(50,205,150,75);
         brk.addActionListener(this); 
         panel.add(brk);
 

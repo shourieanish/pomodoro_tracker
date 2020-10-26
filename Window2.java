@@ -17,6 +17,7 @@ public class Window2 implements ActionListener, ItemListener {
 
     public Window2(boolean isWork) {
 
+
         this.isWork = isWork;
 
         panel = new JPanel();
@@ -54,7 +55,7 @@ public class Window2 implements ActionListener, ItemListener {
         panel.add(start);
 
         back = new JButton("Back");
-        back.setBounds(10,10,50,35);
+        back.setBounds(12,10,50,35);
         back.addActionListener(this); 
         panel.add(back);
 

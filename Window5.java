@@ -12,11 +12,13 @@ public class Window5 implements ActionListener {
 	private JFrame frame;
     private JPanel panel;
     private JButton submit;
+    private JTextField d;
     private Date date_start;
     private Date date_finish;
-    private int sec = 0;
-    private int min = 0;
-    private int hr = 0;
+    private int sec;
+    private int min;
+    private int hr;
+    private boolean isWork;
 
     public Window5(int hr, int min, int sec, boolean isWork) {
         date_start = new Date(System.currentTimeMillis() - hr*3600000 - min*60000 - sec*1000);
@@ -25,54 +27,85 @@ public class Window5 implements ActionListener {
         this.hr = hr;
         this.min = min;
         this.sec = sec;
+        this.isWork = isWork;
 
         panel = new JPanel();
         frame = new JFrame("Finished");
-        frame.setSize(350,250);
+        frame.setSize(550,250);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.add(panel);
 
-        submit = new JButton("Start");
-        submit.setBounds(95,175,150,25);
+        panel.setLayout(null);
+
+        JLabel finish = new JLabel("Describe what you did");
+        finish.setBounds(195,52,200,50);
+        finish.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+        panel.add(finish);
+
+        submit = new JButton("Submit");
+        submit.setBounds(235,128,100,50);
         submit.addActionListener(this); 
         panel.add(submit);
+
+        d = new JTextField("Description");
+        d.setBounds(20,90,510,30);
+        panel.add(d);
 
 
         frame.setVisible(true);
     }
 
-    // private void create_csv(int hr, int min, int sec) throws IOException {
+    private void create_csv() throws IOException {
 
-    //     String pattern = "MM/dd/yyyy HH:mm:ss";
+        String getValue = d.getText();
 
-    //     DateFormat df = new SimpleDateFormat(pattern);
+        String pattern = "MM/dd/yyyy HH:mm:ss";
 
-    //     String before = df.format(date_start);
-    //     String now = df.format(date_finish);
+        DateFormat df = new SimpleDateFormat(pattern);
 
-    //     FileWriter pw = new FileWriter("data.csv", true);
-    //     pw.append(before);
-    //     pw.sappend(",");
-    //     pw.append(now);
-    //     pw.append(",");
-    //     pw.append(""+hr);
-    //     pw.append("\n");
-    //     pw.flush();
-    //     pw.close();
+        String before = df.format(date_start);
+        String now = df.format(date_finish);
 
+        FileWriter pw = new FileWriter("productivity_data.csv", true);
+        pw.append(before);
+        pw.append(",");
+        pw.append(now);
+        pw.append(",");
+        String s;
+        if (this.isWork == true) {
+            s = "Work";
+        } else {
+            s = "Break";
+        }
+        pw.append(s);
+        pw.append(",");
+        pw.append(""+this.hr);
+        pw.append(",");
+        pw.append(""+this.min);
+        pw.append(",");
+        pw.append(""+this.sec);
+        pw.append(",");
+        pw.append(getValue);
 
-    // }
+        pw.append("\n");
+        pw.flush();
+        pw.close();
+
+    }
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == submit) {
-            // try {
-            //     create_csv(hr,min,sec);
-            // } catch (IOException ex) {
-            //     System.out.println("Error");
-            // }
-            System.out.println("LeBron");
+            try {
+                create_csv();
+            } catch (IOException ex) {
+                System.out.println("Error");
+            }
+            frame.setVisible(false);
+            frame = null;
+            Window1 w1 = new Window1();
         }
         
     }
+
 }
