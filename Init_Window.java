@@ -2,41 +2,36 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-
-public class Window1 implements ActionListener {
+public class Init_Window implements ActionListener {
 
     private JFrame frame;
     private JPanel panel;
-    private JButton work;
-    private JButton brk;
+    private JButton work, brk;
 
-    public Window1() {
-
+    public Init_Window() {
 
         panel = new JPanel();
-        frame = new JFrame("Pomodoro Tracker");
+        panel.setLayout(null);
+        frame = new JFrame("Pomodoro");
         frame.setSize(250,325);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.add(panel);
 
-        panel.setLayout(null);
-
         JLabel label = new JLabel("Productivity Tracker");
         label.setFont(new Font("Times New Roman", Font.BOLD, 22));
-        label.setBounds(25,10,200,20);
+        label.setBounds(25,18,200,25);
         panel.add(label);
 
         work = new JButton("Start Working");
-        work.setBounds(50,120,150,75);
+        work.setBounds(50,119,150,75);
         work.addActionListener(this); 
         panel.add(work);
 
         brk = new JButton("Take a Break");
-        brk.setBounds(50,205,150,75);
+        brk.setBounds(50,203,150,75);
         brk.addActionListener(this); 
         panel.add(brk);
-
 
         frame.setVisible(true);
         
@@ -44,18 +39,16 @@ public class Window1 implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == work) {
-            frame.setVisible(false);
-            frame = null;
-            Window2 w2 = new Window2(true);
+            frame.dispose();
+            new SetTimer(true);
         } else if (e.getSource() == brk) {
-            frame.setVisible(false);
-            frame = null;
-            Window2 w2 = new Window2(false);
+            frame.dispose();
+            new SetTimer(false);
         }
     }
 
     public static void main(String[] args) {
-        new Window1();
+        new Init_Window();
     }
     
 }

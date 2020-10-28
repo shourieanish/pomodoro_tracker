@@ -8,26 +8,29 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class Window5 implements ActionListener {
+public class DescriptionBox implements ActionListener {
+
 	private JFrame frame;
     private JPanel panel;
     private JButton submit;
     private JTextField d;
-    private Date date_start;
-    private Date date_finish;
-    private int sec;
-    private int min;
-    private int hr;
-    private boolean isWork;
+    private Date date_start, date_finish;
+    private int hr, min, sec;
+    private boolean isWork, isInterrupted;
 
-    public Window5(int hr, int min, int sec, boolean isWork) {
-        date_start = new Date(System.currentTimeMillis() - hr*3600000 - min*60000 - sec*1000);
+    public DescriptionBox(Date date_start, int hr, int min, int sec, boolean isWork, boolean isInterrupted) {
+        if (date_start != null) {
+            this.date_start = date_start;
+        } else {
+            this.date_start = new Date(System.currentTimeMillis());
+        }
         date_finish = new Date(System.currentTimeMillis());
 
         this.hr = hr;
         this.min = min;
         this.sec = sec;
         this.isWork = isWork;
+        this.isInterrupted = isInterrupted;
 
         panel = new JPanel();
         frame = new JFrame("Finished");
@@ -48,7 +51,7 @@ public class Window5 implements ActionListener {
         submit.addActionListener(this); 
         panel.add(submit);
 
-        d = new JTextField("Description");
+        d = new JTextField();
         d.setBounds(20,90,510,30);
         panel.add(d);
 
@@ -60,7 +63,7 @@ public class Window5 implements ActionListener {
 
         String getValue = d.getText();
 
-        String pattern = "MM/dd/yyyy HH:mm:ss";
+        String pattern = "MM/dd/yyyy HH:mm:ss Z";
 
         DateFormat df = new SimpleDateFormat(pattern);
 
@@ -68,25 +71,38 @@ public class Window5 implements ActionListener {
         String now = df.format(date_finish);
 
         FileWriter pw = new FileWriter("productivity_data.csv", true);
+        pw.append("\n");
         pw.append(before);
         pw.append(",");
         pw.append(now);
         pw.append(",");
-        String s;
+
+        String s1;
         if (this.isWork == true) {
-            s = "Work";
+            s1 = "Work";
         } else {
-            s = "Break";
+            s1 = "Break";
         }
-        pw.append(s);
+
+
+
+        pw.append(s1);
         pw.append(",");
-        pw.append(""+this.hr);
+        if (isInterrupted == true) {
+            pw.append("yes");
+        } else {
+            pw.append("no");
+        }
         pw.append(",");
-        pw.append(""+this.min);
+        pw.append("" + this.hr);
         pw.append(",");
-        pw.append(""+this.sec);
+        pw.append("" + this.min);
         pw.append(",");
+        pw.append("" + this.sec);
+        pw.append(",");
+        pw.append("\"");
         pw.append(getValue);
+        pw.append("\"");
 
         pw.append("\n");
         pw.flush();
@@ -101,9 +117,8 @@ public class Window5 implements ActionListener {
             } catch (IOException ex) {
                 System.out.println("Error");
             }
-            frame.setVisible(false);
-            frame = null;
-            Window1 w1 = new Window1();
+            frame.dispose();
+            new Init_Window();
         }
         
     }

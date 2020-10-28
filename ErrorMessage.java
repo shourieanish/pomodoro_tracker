@@ -2,20 +2,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Window4 implements ActionListener {
+public class ErrorMessage implements ActionListener {
 	private JFrame frame;
     private JPanel panel;
     private JButton ok;
 
-    public Window4() {
+    public ErrorMessage() {
 
         panel = new JPanel();
+        panel.setLayout(null);
         frame = new JFrame("Error");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(170,125);
         frame.setResizable(false);
         frame.add(panel);
-
-        panel.setLayout(null);
 
         JLabel message1 = new JLabel("Please enter");
         message1.setBounds(45,18,125,25);
@@ -30,15 +30,13 @@ public class Window4 implements ActionListener {
         ok.addActionListener(this); 
         panel.add(ok);
 
-
         frame.setVisible(true);
         
     }
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == ok) {
-            frame.setVisible(false);
-            frame = null;
+            frame.dispose();
      	}
     }
 

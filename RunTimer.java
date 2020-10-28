@@ -1,27 +1,20 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.Timer;
-import java.util.TimerTask;
+import java.util.Date;
 
-public class Window3 implements ActionListener {
+public class RunTimer implements ActionListener {
+
 	private JFrame frame;
     private JPanel panel;
-    private JButton start;
-    private JButton stop;
-    private JButton reset;
-    private JLabel sec_label;
-    private JLabel min_label;
-    private JLabel hr_label;
-    private JLabel colon1;
-    private JLabel colon2;
-    private int tm;
-    private int tm_init;
-    private boolean timer_started = false;
+    private JButton start, stop, reset, interrupt;
+    private JLabel sec_label, min_label, hr_label, colon1, colon2;
+    private int tm, tm_init;
     private Timer timer;
-    private boolean isWork;
+    private boolean isWork, got_start_time = false, timer_started = false;
+    private Date date_start;
 
-    public Window3(int hr, int min, int sec, boolean isWork) {
+    public RunTimer(int hr, int min, int sec, boolean isWork) {
 
         this.isWork = isWork;
 
@@ -29,22 +22,21 @@ public class Window3 implements ActionListener {
         tm_init = tm;
 
         panel = new JPanel();
+        panel.setLayout(null);
         frame = new JFrame("Timer");
-        frame.setSize(250,400);
+        frame.setSize(250,325);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.add(panel);
 
-        panel.setLayout(null);
-
         colon1 = new JLabel(":");
-        colon1.setFont(new Font("Times New Roman", Font.PLAIN, 38));
-        colon1.setBounds(90,46,150,50);
+        colon1.setFont(new Font("Times New Roman", Font.PLAIN, 44));
+        colon1.setBounds(86,37,150,50);
         panel.add(colon1);
 
         colon2 = new JLabel(":");
-        colon2.setFont(new Font("Times New Roman", Font.PLAIN, 38));
-        colon2.setBounds(155,46,150,50);
+        colon2.setFont(new Font("Times New Roman", Font.PLAIN, 44));
+        colon2.setBounds(152,37,150,50);
         panel.add(colon2);
 
         hr_label = new JLabel("");
@@ -53,8 +45,8 @@ public class Window3 implements ActionListener {
         } else {
             hr_label.setText("" + hr);
         }
-        hr_label.setFont(new Font("Times New Roman", Font.PLAIN, 38));
-        hr_label.setBounds(43,46,150,50);
+        hr_label.setFont(new Font("Times New Roman", Font.PLAIN, 44));
+        hr_label.setBounds(40,40,150,50);
         panel.add(hr_label);
 
         min_label = new JLabel("");
@@ -63,8 +55,8 @@ public class Window3 implements ActionListener {
         } else {
             min_label.setText("" + min);
         }
-        min_label.setFont(new Font("Times New Roman", Font.PLAIN, 38));
-        min_label.setBounds(108,46,150,50);
+        min_label.setFont(new Font("Times New Roman", Font.PLAIN, 44));
+        min_label.setBounds(105,40,150,50);
         panel.add(min_label);
 
         sec_label = new JLabel("");
@@ -73,38 +65,43 @@ public class Window3 implements ActionListener {
         } else {
             sec_label.setText("" + sec);
         }
-        sec_label.setFont(new Font("Times New Roman", Font.PLAIN, 38));
-        sec_label.setBounds(173,46,150,50);
+        sec_label.setFont(new Font("Times New Roman", Font.PLAIN, 44));
+        sec_label.setBounds(170,40,150,50);
         panel.add(sec_label);
 
         start = new JButton("Start");
-        start.setBounds(50,120,150,75);
+        start.setBounds(15,145,110,65);
         start.addActionListener(this); 
         panel.add(start);
 
         stop = new JButton("Pause");
-        stop.setBounds(50,200,150,75);
+        stop.setBounds(125,145,110,65);
         stop.addActionListener(this); 
         panel.add(stop);
 
         reset = new JButton("Reset");
-        reset.setBounds(50,280,150,75);
+        reset.setBounds(15,210,110,65);
         reset.addActionListener(this); 
         panel.add(reset);
 
+        interrupt = new JButton("Interrupt");
+        interrupt.setBounds(125,210,110,65);
+        interrupt.addActionListener(this); 
+        panel.add(interrupt);
 
         frame.setVisible(true);
 
         timer = new Timer(1000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (tm == 0){
+                    // Sound f = new Sound();
+                    // f.playSound();
                     timer.stop();
-                    frame.setVisible(false);
-                    frame = null;
-                    Window5 w5 = new Window5(hr, min, sec, isWork);
+                    frame.dispose();
+                    new DescriptionBox(date_start, hr, min, sec, isWork, false);
                 } else {
                     tm --;
-                    int hr_temp = (int)tm/3600;
+                    int hr_temp = (int) tm/3600;
                     int min_temp = (int) (tm - (hr_temp*3600))/60;
                     if (hr_temp <= 9) {
                         hr_label.setText("0" +hr_temp);
@@ -128,7 +125,12 @@ public class Window3 implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+
         if (e.getSource() == start && timer_started == false) {
+            if (got_start_time == false) {
+                date_start = new Date(System.currentTimeMillis()+1000);
+                got_start_time = true;
+            }
             timer.start();
     		timer_started = true;
      	} else if (e.getSource() == stop) {
@@ -136,8 +138,16 @@ public class Window3 implements ActionListener {
      		timer_started = false;
      	} else if (e.getSource() == reset) {
             timer.stop();
-            frame.setVisible(false);
-            Window2 w2 = new Window2(isWork);
+            frame.dispose();
+            new SetTimer(isWork);
+        } else if (e.getSource() == interrupt) {
+            timer.stop();
+            frame.dispose();
+            int tm_worked = tm_init - tm;
+            int hr_left = (int) tm_worked/3600;
+            int min_left = (int) (tm_worked - (hr_left*3600))/60;
+            int sec_left = tm_worked%60;
+            new DescriptionBox(date_start, hr_left, min_left, sec_left, isWork, true);
         }
     }
 
