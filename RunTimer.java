@@ -11,7 +11,7 @@ public class RunTimer implements ActionListener {
     private JLabel sec_label, min_label, hr_label, colon1, colon2;
     private int tm, tm_init;
     private Timer timer;
-    private boolean isWork, got_start_time = false, timer_started = false;
+    private boolean isWork, isPaused = false, got_start_time = false, timer_started = false;
     private Date date_start;
 
     public RunTimer(int hr, int min, int sec, boolean isWork) {
@@ -94,11 +94,11 @@ public class RunTimer implements ActionListener {
         timer = new Timer(1000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (tm == 0){
-                    // Sound f = new Sound();
-                    // f.playSound();
+                    Sound f = new Sound();
+                    f.playSound();
                     timer.stop();
                     frame.dispose();
-                    new DescriptionBox(date_start, hr, min, sec, isWork, false);
+                    new DescriptionBox(date_start, hr, min, sec, isWork, false, isPaused);
                 } else {
                     tm --;
                     int hr_temp = (int) tm/3600;
@@ -134,6 +134,9 @@ public class RunTimer implements ActionListener {
             timer.start();
     		timer_started = true;
      	} else if (e.getSource() == stop) {
+            if (got_start_time == true) {
+                isPaused = true;
+            }
      		timer.stop();
      		timer_started = false;
      	} else if (e.getSource() == reset) {
@@ -147,7 +150,7 @@ public class RunTimer implements ActionListener {
             int hr_left = (int) tm_worked/3600;
             int min_left = (int) (tm_worked - (hr_left*3600))/60;
             int sec_left = tm_worked%60;
-            new DescriptionBox(date_start, hr_left, min_left, sec_left, isWork, true);
+            new DescriptionBox(date_start, hr_left, min_left, sec_left, isWork, true, isPaused);
         }
     }
 

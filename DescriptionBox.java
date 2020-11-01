@@ -18,13 +18,14 @@ public class DescriptionBox implements ActionListener {
     private int hr, min, sec;
     private boolean isWork, isInterrupted;
 
-    public DescriptionBox(Date date_start, int hr, int min, int sec, boolean isWork, boolean isInterrupted) {
-        if (date_start != null) {
-            this.date_start = date_start;
-        } else {
-            this.date_start = new Date(System.currentTimeMillis());
-        }
+    public DescriptionBox(Date started, int hr, int min, int sec, boolean isWork, boolean isInterrupted, boolean isPaused) {
+
+        this.date_start = new Date(System.currentTimeMillis() - 3600000*hr - 60000*min - 1000*sec);
         date_finish = new Date(System.currentTimeMillis());
+        
+        if (started != null && isPaused == true) {
+            this.date_start = started;
+        }
 
         this.hr = hr;
         this.min = min;
@@ -63,7 +64,7 @@ public class DescriptionBox implements ActionListener {
 
         String getValue = d.getText();
 
-        String pattern = "MM/dd/yyyy HH:mm:ss Z";
+        String pattern = "MM/dd/yyyy HH:mm:ss z";
 
         DateFormat df = new SimpleDateFormat(pattern);
 
@@ -83,8 +84,6 @@ public class DescriptionBox implements ActionListener {
         } else {
             s1 = "Break";
         }
-
-
 
         pw.append(s1);
         pw.append(",");
