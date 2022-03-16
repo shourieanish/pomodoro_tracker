@@ -2,6 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/*
+Error message that pops up if the timer is set to 
+0 hr, 0 min, 0 sec
+*/
+
 public class ErrorMessage implements ActionListener {
 	private JFrame frame;
     private JPanel panel;
@@ -21,6 +26,7 @@ public class ErrorMessage implements ActionListener {
         message1.setBounds(45,18,125,25);
         panel.add(message1);
 
+        // splitting label into two lines
         JLabel message2 = new JLabel("a valid time.");
         message2.setBounds(45,32,125,25);
         panel.add(message2);
